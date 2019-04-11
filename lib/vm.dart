@@ -6,21 +6,21 @@ library stomp_vm;
 import "dart:async";
 import "dart:io";
 
-import "stomp.dart" show StompClient;
 import "impl/plugin_vm.dart" show SocketStompConnector;
+import "stomp.dart" show StompClient;
 
 /** Connects a STOMP server, and instantiates a [StompClient]
  * to represent the connection.
  *
  *     import "package:stomp/stomp.dart";
  *     import "package:stomp/vm.dart" show connect;
- * 
+ *
  *     void main() {
  *       connect("foo.server.com").then((StompClient stomp) {
  *         stomp.subscribeString("/foo", (String message) {
  *           print("Recieve $message");
  *         });
- * 
+ *
  *         stomp.sendString("/foo", "Hi, Stomp");
  *       });
  *     }
@@ -31,14 +31,26 @@ import "impl/plugin_vm.dart" show SocketStompConnector;
  * * [onError] -- callback when the ERROR frame is received.
  * * [onFault] -- callback when an exception is received.
  */
-Future<StompClient> connect(address, {int port: 61626,
-    String host, String login, String passcode, List<int> heartbeat,
-    void onConnect(StompClient client, Map<String, String> headers),
-    void onDisconnect(StompClient client),
-    void onError(StompClient client, String message, String detail, Map<String, String> headers),
-    void onFault(StompClient client, error, stackTrace)})
-=> Socket.connect(address, port).then((Socket socket)
-  => StompClient.connect(new SocketStompConnector(socket),
-    host: host, login: login, passcode: passcode, heartbeat: heartbeat,
-    onConnect: onConnect, onDisconnect: onDisconnect,
-    onError: onError, onFault: onFault));
+Future<StompClient> connect(address,
+        {int port: 61626,
+        String host,
+        String login,
+        String passcode,
+        List<int> heartbeat,
+        Map<String, String> headers,
+        void onConnect(StompClient client, Map<String, String> headers),
+        void onDisconnect(StompClient client),
+        void onError(StompClient client, String message, String detail,
+            Map<String, String> headers),
+        void onFault(StompClient client, error, stackTrace)}) =>
+    Socket.connect(address, port).then((Socket socket) => StompClient.connect(
+        new SocketStompConnector(socket),
+        host: host,
+        login: login,
+        passcode: passcode,
+        heartbeat: heartbeat,
+        headers: headers,
+        onConnect: onConnect,
+        onDisconnect: onDisconnect,
+        onError: onError,
+        onFault: onFault));
