@@ -4,9 +4,10 @@
 library stomp;
 
 import "dart:async";
+import "dart:collection" show HashMap, LinkedHashMap;
 import "dart:convert";
 import "dart:math" show max;
-import "dart:collection" show HashMap, LinkedHashMap;
+
 import "package:quiver/pattern.dart" as qp show Glob;
 
 import "impl/plugin.dart" show StompConnector;
@@ -18,6 +19,7 @@ part "src/stomp_util.dart";
 ///The ACK mode.
 class Ack {
   final String id;
+
   const Ack._(this.id);
 }
 
@@ -58,6 +60,7 @@ abstract class StompClient {
 
   ///The information about the STOMP server, such as `ripple/1.0.0`.
   String get server;
+
   /** The heart beat. A two-element array. The first element is
    * the smallest number of milliseconds that the server can do.
    * The second element is the desired number of milliseconds the
@@ -82,6 +85,7 @@ abstract class StompClient {
       String login,
       String passcode,
       List<int> heartbeat,
+      Map<String, String> headers,
       void onConnect(StompClient client, Map<String, String> headers),
       void onDisconnect(StompClient client),
       void onError(StompClient client, String message, String detail,
@@ -92,7 +96,7 @@ abstract class StompClient {
           "Required: connector. Use stomp_vm's connect() instead.");
 
     return _StompClient.connect(connector, host, login, passcode, heartbeat,
-        onConnect, onDisconnect, onError, onFault);
+        headers, onConnect, onDisconnect, onError, onFault);
   }
 
   /** Disconnects. After disconnected, this object can not be used any more.
@@ -108,6 +112,7 @@ abstract class StompClient {
    */
   void sendBytes(String destination, List<int> message,
       {Map<String, String> headers});
+
   /** Sends a String-typed message.
    *
    *     stomp.send("/foo", "Hi, there");
@@ -119,6 +124,7 @@ abstract class StompClient {
    */
   void sendString(String destination, String message,
       {Map<String, String> headers});
+
   /** Sends a JSON message.
    *
    *     stomp.send("/foo", {"type": 1, "data": ["abc"]});
@@ -130,6 +136,7 @@ abstract class StompClient {
    * In other words, it must be able to *jsonized* into a JSON string.
    */
   void sendJson(String destination, message, {Map<String, String> headers});
+
   /** Sends a message read from a given [Stream].
    * It saves the memory use since the message is *piping* from [Stream]
    * to the network directly.
@@ -172,6 +179,7 @@ abstract class StompClient {
       String receipt,
       Matcher matcher: exact,
       Map extraHeaders});
+
   /** Subscribes for listening a given destination; assuming the message
    * are a String.
    *
@@ -195,6 +203,7 @@ abstract class StompClient {
       String receipt,
       Matcher matcher: exact,
       Map extraHeaders});
+
   /** Subscribes for listening a given destination; assuming the message
    * are a JSON object.
    *
@@ -218,6 +227,7 @@ abstract class StompClient {
       String receipt,
       Matcher matcher: exact,
       Map extraHeaders});
+
   /** Subscribes for listening to a given destination.
    * Like [sendBlob], it is useful if you'd like to receive a huge amount of
    * message (without storing them in memory first).
@@ -262,6 +272,7 @@ abstract class StompClient {
    * of the frame sent to the server.
    */
   void receipt(String receipt, void onReceipt(String receipt));
+
   /** Removes the listener added by [receipt].
    */
   void unreceipt(String receipt);
@@ -274,6 +285,7 @@ abstract class StompClient {
    * of the named transaction.
    */
   void ack(String id, {String transaction});
+
   /** The opposite of [ack].
    */
   void nack(String id, {String transaction});
@@ -285,9 +297,11 @@ abstract class StompClient {
    * It shall match the transaction argument of [commit] and [abort].
    */
   void begin(String transaction, {String receipt});
+
   /** Commits a transaction.
    */
   void commit(String transaction, {String receipt});
+
   /** Aborts a transaction.
    */
   void abort(String transaction, {String receipt});

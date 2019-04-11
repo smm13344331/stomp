@@ -70,12 +70,14 @@ class _StompClient implements StompClient {
 
   ///The information about the STOMP server, such as `Ripple/1.0.0`.
   String get server => _server;
+
   /** The heart beat. A two-element array. The first element is
    * the smallest number of milliseconds that the server can do.
    * The second element is the desired number of milliseconds the
    * server would like to get.
    */
   final List<int> heartbeat = new List(2);
+
   bool get isDisconnected => _disconnected;
 
   static Future<StompClient> connect(
@@ -84,6 +86,7 @@ class _StompClient implements StompClient {
       String login,
       String passcode,
       List<int> heartbeat,
+      Map<String, String> headers,
       void onConnect(StompClient client, Map<String, String> headers),
       void onDisconnect(StompClient client),
       void onError(StompClient client, String message, String detail,
@@ -93,7 +96,6 @@ class _StompClient implements StompClient {
         new _StompClient(connector, onConnect, onDisconnect, onError, onFault);
     client._connecting = new Completer<StompClient>();
 
-    final Map<String, String> headers = new LinkedHashMap();
     headers["accept-version"] = "1.2";
     if (host != null) headers["host"] = host;
     if (login != null) headers["login"] = login;
@@ -114,6 +116,7 @@ class _StompClient implements StompClient {
       this._onError, this._onFault) {
     _init();
   }
+
   void _init() {
     _parser = new FrameParser((Frame frame) {
       final _FrameHandler handler = _frameHandlers[frame.command];
@@ -435,6 +438,7 @@ class _StompClient implements StompClient {
 }
 
 typedef void _FrameHandler(_StompClient client, Frame frame);
+
 final Map<String, _FrameHandler> _frameHandlers = {
   CONNECTED: (_StompClient client, Frame frame) {
     client._connected(frame);
