@@ -10,8 +10,6 @@
 
 Stomp Dart Client is distributed under an Apache 2.0 License.
 
-[![Build Status](https://drone.io/github.com/rikulo/stomp/status.png)](https://drone.io/github.com/rikulo/stomp/latest)
-
 > See also [Ripple - Lightweight Dart Messaging Server](https://github.com/rikulo/ripple).
 
 ## Installation
