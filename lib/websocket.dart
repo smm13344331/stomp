@@ -6,8 +6,8 @@ library stomp_websocket;
 import "dart:async";
 import "dart:html" show WebSocket, MessageEvent;
 
-import "stomp.dart" show StompClient;
 import "impl/plugin.dart" show StringStompConnector;
+import "stomp.dart" show StompClient;
 
 /** Connects a STOMP server, and instantiates a [StompClient]
  * to represent the connection.
@@ -34,6 +34,7 @@ Future<StompClient> connect(String url,
         String login,
         String passcode,
         List<int> heartbeat,
+        Map<String, String> headers,
         void onConnect(StompClient client, Map<String, String> headers),
         void onDisconnect(StompClient client),
         void onError(StompClient client, String message, String detail,
@@ -44,6 +45,7 @@ Future<StompClient> connect(String url,
         login: login,
         passcode: passcode,
         heartbeat: heartbeat,
+        headers: headers,
         onConnect: onConnect,
         onDisconnect: onDisconnect,
         onError: onError,
@@ -63,13 +65,15 @@ Future<StompClient> connectWith(WebSocket socket,
         void onDisconnect(StompClient client),
         void onError(StompClient client, String message, String detail,
             Map<String, String> headers),
-        void onFault(StompClient client, error, stackTrace)}) =>
+        void onFault(StompClient client, error, stackTrace),
+        Map<String, String> headers}) =>
     _WSStompConnector.startWith(socket).then((_WSStompConnector connector) =>
         StompClient.connect(connector,
             host: host,
             login: login,
             passcode: passcode,
             heartbeat: heartbeat,
+            headers: headers,
             onConnect: onConnect,
             onDisconnect: onDisconnect,
             onError: onError,
@@ -86,6 +90,7 @@ class _WSStompConnector extends StringStompConnector {
   _WSStompConnector(this._socket) {
     _init();
   }
+
   void _init() {
     _socket.onOpen.listen((_) {
       _starting.complete(this);
