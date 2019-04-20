@@ -7,6 +7,7 @@ documentation: http://api.rikulo.org/stomp/latest
 environment:
   sdk: '>=2.0.0 <3.0.0'
 dependencies:
+  web_socket_channel: ^1.0.12
   quiver: any
 dev_dependencies:
   test: any
