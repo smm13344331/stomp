@@ -10,7 +10,7 @@ class CustomStomp {
           {String host,
           String login,
           String passcode,
-          Map<dynamic, dynamic> headers,
+          Map<String, dynamic> headers,
           List<int> heartbeat,
           void onConnect(StompClient client, Map<String, String> headers),
           void onDisconnect(StompClient client),
