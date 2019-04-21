@@ -85,7 +85,7 @@ abstract class StompClient {
       String login,
       String passcode,
       List<int> heartbeat,
-      Map<String, String> headers,
+      Map<dynamic, dynamic> headers,
       void onConnect(StompClient client, Map<String, String> headers),
       void onDisconnect(StompClient client),
       void onError(StompClient client, String message, String detail,
