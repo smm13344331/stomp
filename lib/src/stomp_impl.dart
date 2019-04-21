@@ -95,7 +95,9 @@ class _StompClient implements StompClient {
     final _StompClient client =
         new _StompClient(connector, onConnect, onDisconnect, onError, onFault);
     client._connecting = new Completer<StompClient>();
-
+    if (headers == null) {
+      headers = <String, String>{};
+    }
     headers["accept-version"] = "1.2";
     if (host != null) headers["host"] = host;
     if (login != null) headers["login"] = login;
