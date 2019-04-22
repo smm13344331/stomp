@@ -5,7 +5,8 @@ part of stomp_impl_util;
 
 //Commands//
 const String CONNECT = "CONNECT";
-const String STOMP = "STOMP";
+//const String STOMP = "STOMP";
+const String STOMP = "CONNECT";
 const String CONNECTED = "CONNECTED";
 const String DISCONNECT = "DISCONNECT";
 const String SEND = "SEND";
